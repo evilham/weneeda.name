@@ -182,7 +182,6 @@ class DNSWordsRecordProducer(object):
     def get(self, name, default=tuple()):
         # Return NS entries
         if name == self.base:
-            log.debug("Issue {n}, {b}, {ns}", n=name, b=self.base, ns=self.ns_name)
             return (dns.Record_NS(self.base, ttl=TTL),) + self.extra_records
 
         if not name.endswith(self.base):

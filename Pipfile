@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.7"
 
 [packages]
-pytest = "*"
 twisted = {extras = [ "names", "tls",]}
 mmh3 = "*"

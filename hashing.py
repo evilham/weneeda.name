@@ -18,6 +18,8 @@ def hash_generator(s, range=2**128):
 
         good_hash = next(dropwhile(has_collision, hash_generator(thing)))
 
+    See ./test_hashing.py for more usage examples.
+
     @param s: input string or bytes
 
     @param range: Return a number between 0 and range instead of the full range of the hash
@@ -31,11 +33,11 @@ def hash_generator(s, range=2**128):
 
     # Second hash: yield hashes in intervals determined by the second hash
     h = base
-    interval = 1 + mmh3.hash(s, seed=47, signed=False)  # must not be 0; must be independent of the first hash
+    interval = (1 + mmh3.hash(s, seed=47, signed=False)) % range  # must not be 0; must be independent of the first hash
     while True:
         h = (h + interval) % range
-        yield h
         if h == base: break
+        yield h
 
 def hash_parts_generator(s, count_parts, part_range):
     for h in hash_generator(s, range=part_range**count_parts):

@@ -1,6 +1,9 @@
-# twisted-dnslabs
+# [twisted-dnslabs](https://github.com/evilham/twisted-dnslabs)
 
 DNS testing ground based on twisted.
+
+Brought forward on [Hack4Glarus 2019 -- Winter Edition][h4g] with help from
+[@anotherkamila][kamila], [@fnux][fnux] and [@evilham][evilham].
 
 ## Zone manager with friendly words for IPs
 
@@ -45,3 +48,9 @@ embedded in your NAT64's IPv6 prefix.
 
 (**): Hosted on a best-effort basis :-).
       Host your own if you want to depend on it.
+
+[h4g]: https://hack4glarus.ch
+[ygg]: https://yggdrasil-network.github.io
+[kamila]: https://kamila.is
+[fnux]: https://fnux.ch
+[evilham]: https://evilham.com

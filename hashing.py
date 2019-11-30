@@ -1,6 +1,6 @@
 import mmh3
 
-def hash_generator(s, range=2**128, seed1=42, infinite=False):
+def hash_generator(s, range=2**128):
     """Generator that returns a list of hashes of the input.
 
     The list is deterministic, so the intended usage is to keep getting hashes
@@ -25,27 +25,18 @@ def hash_generator(s, range=2**128, seed1=42, infinite=False):
     It implements double hashing (https://en.wikipedia.org/wiki/Double_hashing)
     using MurmurHash3.
     """
-    print("*** hash_generator: range", range)
-    i = 0
     # First hash: absolute offset / base
-    base = mmh3.hash128(s, seed=seed1) % range
-    h = base
-    yield h
+    base = mmh3.hash128(s, seed=42) % range
+    yield base
     # Second hash: yield hashes in consecutive intervals determined by the
     # second hash
-    interval = 1 + mmh3.hash128(s, seed=seed1+47)  # must not be 0; must be independent of the first hash
-    while h != base:
+    interval = 1 + mmh3.hash(s, seed=47, signed=False)  # must not be 0; must be independent of the first hash
+    while True:
         h = (h + interval) % range
         yield h
-    print("stopping after {} iterations".format(i))
+        if h == base: break
 
 def hash_parts_generator(s, count_parts, part_range):
-    """This gives up too early!"""
-    hashgens = [hash_generator(s, part_range, seed1=i) for i in range(count_parts)]
-    return zip(*hashgens)
-
-def hash_parts_generator2(s, count_parts, part_range):
-    """This is horribly broken somehow :D"""
-    for h in hash_generator(s, range=count_parts*part_range):
-        print('***', h)
-        yield tuple([((h % (part_range**i)) // (part_range**(i-1))) for i in range(count_parts)])
+    for h in hash_generator(s, range=part_range**count_parts):
+        parts = [ ((h // (part_range**i)) % part_range) for i in range(count_parts) ]
+        yield tuple(parts)

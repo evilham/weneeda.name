@@ -3,7 +3,7 @@ from itertools import dropwhile
 import mmh3
 import pytest
 
-from hashing import hash_generator, hash_parts_generator, hash_parts_generator2
+from hashing import hash_generator, hash_parts_generator
 
 def test_hash_generator_imperative():
     """Test usage of hash_generator in an imperative way.
@@ -75,9 +75,9 @@ def test_table_full_handled():
     assert 1 < len(my_hashes) < 4, "we fit what we could"
 
 def test_hash_parts_generator():
-    N = 1000
+    N = 4000
     PARTS = 3
-    RANGE = 100
+    RANGE = 20
     my_hashes = []
     to_hash = [str(i) for i in range(N)]
 
@@ -89,28 +89,7 @@ def test_hash_parts_generator():
         # print(thing, h)
         my_hashes.append(h)
 
-    assert len(my_hashes) == N, "no collisions occured"
-    for h in my_hashes:
-        assert len(h) == PARTS
-        for part in h:
-            assert 0 <= part < RANGE
-
-def test_hash_parts_generator2():
-    N = 10
-    PARTS = 3
-    RANGE = 100
-    my_hashes = []
-    to_hash = [str(i) for i in range(N)]
-
-    def has_collision(h):
-        return h in my_hashes
-
-    for thing in to_hash:
-        h = next(dropwhile(has_collision, hash_parts_generator2(thing, PARTS, RANGE)))
-        print(thing, h)
-        my_hashes.append(h)
-
-    assert len(my_hashes) == N, "no collisions occured"
+    assert len(my_hashes) == N, "no unresolvable collisions occured"
     for h in my_hashes:
         assert len(h) == PARTS
         for part in h:

@@ -41,8 +41,12 @@ class _WordsController(object):
             """
             A GET request from a registered zone's subnet is sufficient to
             trigger a name assignment.
+            We support mainly the `domain` parameter so that it's easy to reach
+            from yggdrasil and other networks.
             """
-            hostname = request.getRequestHostname()
+            hostname = request.args.get(b'domain', [False])[0]
+            if not hostname:
+                hostname = request.getRequestHostname()
             ip = request.getClientIP()
             return self.register_ip(hostname, ip)
 

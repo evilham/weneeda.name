@@ -16,7 +16,7 @@ This is deployed for the [yggdrasil][ygg] experimental network on
 In order to get a name assigned to you, execute from an [yggdrasil][ygg]
 enabled system:
 
-    curl yggdrasil.ungleich.cloud/register
+    curl "http://[204:504b:aea1:a6c6:453e:939f:ac70:1515]/register?domain=yggdrasil.ungleich.cloud"
 
 This operation is idempotent and the three words are derived from your
 client's IP address (*).

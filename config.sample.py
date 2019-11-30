@@ -21,8 +21,11 @@ from twisted.names import dns
 config = {
     "zones": [
         DNSEchoAuthority(b"echo4.dnslab.evilham.com", b"yggdrasil.evilham.com"),
-        DNSWordsAuthority(b"yggdrasil.ungleich.cloud", b"yggdrasil.ungleich.cloud",
-            extra_records=(dns.Record_AAAA('2a0a:e5c0:0:2:0:b3ff:fe39:7975'),)),
+        DNSWordsAuthority(
+            b"yggdrasil.ungleich.cloud",
+            b"yggdrasil.ungleich.cloud",
+            extra_records=(dns.Record_AAAA("2a0a:e5c0:0:5:0:78ff:fe11:d762"),),
+        ),
     ],
     "apiendpoint": b"tcp6:8080",
     "verbose": 2,

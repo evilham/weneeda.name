@@ -10,7 +10,7 @@ class DNSEchoRecordProducer:
         # Return NS entries
         print("Original", name)
         if name == self.base:
-            return (dns.Record_NS(self.base, self.ns_name),)
+            return (dns.Record_NS(self.base, ttl=604800),)
 
         if not name.endswith(self.base):
             return default

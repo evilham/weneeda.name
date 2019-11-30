@@ -94,3 +94,10 @@ def test_hash_parts_generator():
         assert len(h) == PARTS
         for part in h:
             assert 0 <= part < RANGE
+
+def test_hash_does_not_repeat():
+    all_hashes = list(hash_generator("hi", range=1000))
+    assert len(all_hashes) == len(set(all_hashes)), "hashes are unique"
+
+def test_hash_is_deterministic():
+    assert list(hash_generator("hi", range=42)) == [7, 19, 31, 1, 13, 25, 37]

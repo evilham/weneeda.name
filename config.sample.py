@@ -8,6 +8,8 @@ from dnswords import DNSWordsAuthority, WordsController
 #
 # That being said, only required keys in config are:
 #   zones: a list of Authorities (e.g. DNSEchoAutority and DNSWordsAuthority)
+#   dnsport: a TCP/UDP port to listen to for DNS requests
+#   dnsinterface: binding addresses to listen to for DNS requests
 #   verbose: verbosity level for the DNS bits of twisted (e.g. 2)
 #   apiendpoint: only required when a zone is registered to WordsController
 #     See Twisted Endpoints:
@@ -22,7 +24,9 @@ config = {
     ],
     "apiendpoint": b"tcp6:8080",
     "verbose": 2,
+    "dnsport": 5353,
+    "dnsinterface": "::",
 }
 
 # Notice as well that you must register any zones to WordsController yourself
-WordsController.register_zone(b"yggdrasil.ungleich.cloud", ip_network("::/0"))
+WordsController.register_zone(b"yggdrasil.ungleich.cloud", ip_network("0200::/7"))

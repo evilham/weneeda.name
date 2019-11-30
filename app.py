@@ -9,7 +9,13 @@ from dnswords import WordsController
 
 
 # TODO: Make config prettier
-from config import config
+try:
+    from config import config
+except ImportError:
+    import sys
+
+    sys.stdout.write("\n***\nYou need to setup config.py, see config.sample.py\n***\n")
+    sys.exit(1)
 
 
 def main():
@@ -23,8 +29,12 @@ def main():
     )
     udp_f = dns.DNSDatagramProtocol(tcp_f)
 
-    tcp_s = internet.TCPServer(5353, tcp_f, interface="::")
-    udp_s = internet.UDPServer(5353, udp_f, interface="::")
+    tcp_s = internet.TCPServer(
+        config["dnsport"], tcp_f, interface=config["dnsinterface"]
+    )
+    udp_s = internet.UDPServer(
+        config["dnsport"], udp_f, interface=config["dnsinterface"]
+    )
 
     # Start DNS services
     tcp_s.startService()

@@ -1,6 +1,7 @@
 import mmh3
 
-def hash_generator(s, range=2**128):
+
+def hash_generator(s, range=2 ** 128):
     """Generator that returns a list of hashes of the input.
 
     The list is deterministic, so the intended usage is to keep getting hashes
@@ -33,13 +34,17 @@ def hash_generator(s, range=2**128):
 
     # Second hash: yield hashes in intervals determined by the second hash
     h = base
-    interval = (1 + mmh3.hash(s, seed=47, signed=False)) % range  # must not be 0; must be independent of the first hash
+    interval = (
+        1 + mmh3.hash(s, seed=47, signed=False)
+    ) % range  # must not be 0; must be independent of the first hash
     while True:
         h = (h + interval) % range
-        if h == base: break
+        if h == base:
+            break
         yield h
 
+
 def hash_parts_generator(s, count_parts, part_range):
-    for h in hash_generator(s, range=part_range**count_parts):
-        parts = [ ((h // (part_range**i)) % part_range) for i in range(count_parts) ]
+    for h in hash_generator(s, range=part_range ** count_parts):
+        parts = [((h // (part_range ** i)) % part_range) for i in range(count_parts)]
         yield tuple(parts)

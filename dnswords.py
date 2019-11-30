@@ -34,7 +34,7 @@ class _WordsController(object):
             """
             Public README page
             """
-            return FilePath(self.data_dir.dirname()).child("README.md").getContent()
+            return self.get_readme()
 
         @self.app.route("/register")
         def register(request):
@@ -45,6 +45,15 @@ class _WordsController(object):
             hostname = request.getRequestHostname()
             ip = request.getClientIP()
             return self.register_ip(hostname, ip)
+
+    @lru_cache(10240)
+    def get_readme(self):
+        return (
+            FilePath(self.data_dir.dirname())
+            .child("README.md")
+            .getContent()
+            .decode("utf-8")
+        )
 
     def register_zone(self, zone, subnet):
         """
@@ -79,7 +88,7 @@ class _WordsController(object):
                 400, "Bad Request", "No such zone, consider hosting your own!"
             )
         try:
-            return self.get_assign_name(zone, ip) + b'.' + zone + b'\n'
+            return self.get_assign_name(zone, ip) + b"." + zone + b"\n"
         except ValueError:
             return ForbiddenResource("Your IP is not allowed to use this resource.")
         except LookupError:

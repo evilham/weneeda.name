@@ -28,8 +28,9 @@ def hash_generator(s, range=2**128):
     # First hash: absolute offset / base
     base = mmh3.hash128(s, seed=42) % range
     yield base
-    # Second hash: yield hashes in consecutive intervals determined by the
-    # second hash
+
+    # Second hash: yield hashes in intervals determined by the second hash
+    h = base
     interval = 1 + mmh3.hash(s, seed=47, signed=False)  # must not be 0; must be independent of the first hash
     while True:
         h = (h + interval) % range

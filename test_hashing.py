@@ -62,7 +62,7 @@ def test_table_full_handled():
     With 4 items and range 3, an unresolvable collision must occur (pidgeonhole principle).
     We should not loop infinitely like idiots :D
     """
-    to_hash = ['a', 'b', 'c', 'd']
+    to_hash = [b'a', b'b', b'c', b'd']
     my_hashes = {}
 
     def has_collision(h):
@@ -70,9 +70,9 @@ def test_table_full_handled():
 
     with pytest.raises(StopIteration): # I should be unable to find a non-colliding hash at some point, so my generator will run out
         for thing in to_hash:
-            h = next(dropwhile(has_collision, hash_generator(thing, range=4)))
+            h = next(dropwhile(has_collision, hash_generator(thing, range=3)))
             my_hashes[h] = thing
-    assert 1 < len(my_hashes) < 4, "we fit what we could"
+    assert len(my_hashes) == 3, "we fit what we could"
 
 def test_hash_parts_generator():
     N = 4000

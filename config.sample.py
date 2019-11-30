@@ -23,7 +23,7 @@ config = {
         DNSEchoAuthority(b"echo4.dnslab.evilham.com", b"yggdrasil.evilham.com"),
         DNSWordsAuthority(
             b"yggdrasil.ungleich.cloud",
-            b"yggdrasil.ungleich.cloud",
+            b"ns1-yggdrasil.ungleich.cloud",
             extra_records=(dns.Record_AAAA("2a0a:e5c0:0:5:0:78ff:fe11:d762"),),
         ),
     ],

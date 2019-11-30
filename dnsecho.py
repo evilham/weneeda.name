@@ -43,7 +43,7 @@ class DNSEchoRecordProducer(object):
 # TODO: Open ticket for twisted.names: this is not generic enough
 class DNSEchoAuthority(authority.FileAuthority):
     _ADDITIONAL_PROCESSING_TYPES = tuple()
-    _ADDRESS_TYPES = (dns.A,)
+    _ADDRESS_TYPES = (dns.A, dns.AAAA)
 
     def __init__(self, base, ns_name, extra_records=tuple()):
         self.ns_name = ns_name

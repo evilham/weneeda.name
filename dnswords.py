@@ -8,6 +8,9 @@ from twisted.names import authority, dns
 from twisted.python.filepath import FilePath
 from twisted.web.resource import ErrorPage, ForbiddenResource
 
+from hashing import hash_parts_generator
+
+
 log = logger.Logger(observer=logger.textFileLogObserver(sys.stdout))
 
 
@@ -93,10 +96,10 @@ class _WordsController(object):
     @lru_cache(maxsize=1024)
     def get_assign_name(self, zone, ip):
         ipaddr = ip_address(ip)
-        # TODO: collisions should be handled by iterator
-        it = [self.ip_hash(ip, self.word_count, len(self.all_words))]
+        # collisions should be handled by iterator
+        it = hash_parts_generator(ip, self.word_count, len(self.all_words))
         for h in it:
-            words = self.separator.join(h)
+            words = self.separator.join([self.all_words[i] for i in h])
             record = self.name_to_record(zone, words)
             if not record.exists():
                 break
@@ -120,16 +123,6 @@ class _WordsController(object):
             for i in self.data_dir.child("word_list").getContent().split(b"\n")
             if b"#" not in i
         ]
-
-    def ip_hash(self, ip, a, b):
-        # TODO: Replace with da good stuff
-        words = len(self.all_words)
-        h = hash(ip)
-        coords = [
-            int((h % (words ** i)) // (words ** (i - 1)))
-            for i in range(self.word_count)
-        ]
-        return (self.all_words[i] for i in coords)
 
     def name_to_record(self, zone, words):
         """

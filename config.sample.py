@@ -2,6 +2,7 @@ from ipaddress import ip_network
 
 from dnsecho import DNSEchoAuthority
 from dnswords import DNSWordsAuthority, WordsController
+from twisted.names import dns
 
 # Example config, copy to config.py and adapt to your needs.
 # This is terrible though, please consider adding a PR :-D
@@ -20,7 +21,8 @@ from dnswords import DNSWordsAuthority, WordsController
 config = {
     "zones": [
         DNSEchoAuthority(b"echo4.dnslab.evilham.com", b"yggdrasil.evilham.com"),
-        DNSWordsAuthority(b"yggdrasil.ungleich.cloud", b"yggdrasil.ungleich.cloud"),
+        DNSWordsAuthority(b"yggdrasil.ungleich.cloud", b"yggdrasil.ungleich.cloud",
+            extra_records=(dns.Record_AAAA('2a0a:e5c0:0:2:0:b3ff:fe39:7975'),)),
     ],
     "apiendpoint": b"tcp6:8080",
     "verbose": 2,

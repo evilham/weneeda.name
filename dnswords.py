@@ -174,15 +174,16 @@ class DNSWordsRecordProducer(object):
     addresses.
     """
 
-    def __init__(self, base, ns_name):
+    def __init__(self, base, ns_name, extra_records):
         self.base = base
         self.ns_name = ns_name
+        self.extra_records = extra_records
 
     def get(self, name, default=tuple()):
         # Return NS entries
         if name == self.base:
             log.debug("Issue {n}, {b}, {ns}", n=name, b=self.base, ns=self.ns_name)
-            return (dns.Record_NS(self.base, ttl=TTL),)
+            return (dns.Record_NS(self.base, ttl=TTL),) + self.extra_records
 
         if not name.endswith(self.base):
             return default
@@ -219,8 +220,9 @@ class DNSWordsAuthority(authority.FileAuthority):
     _ADDITIONAL_PROCESSING_TYPES = tuple()
     _ADDRESS_TYPES = (dns.A,)
 
-    def __init__(self, base, ns_name):
+    def __init__(self, base, ns_name, extra_records=tuple()):
         self.ns_name = ns_name
+        self.extra_records = extra_records
         super().__init__(base)
 
     def loadFile(self, base):
@@ -240,4 +242,6 @@ class DNSWordsAuthority(authority.FileAuthority):
             ),
         )
 
-        self.records = DNSWordsRecordProducer(self.base, self.ns_name)
+        self.records = DNSWordsRecordProducer(
+            self.base, self.ns_name, self.extra_records
+        )

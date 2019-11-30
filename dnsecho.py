@@ -1,16 +1,23 @@
+import sys
+
+import twisted.logger as logger
 from twisted.names import authority, dns
 
 
-class DNSEchoRecordProducer:
-    def __init__(self, base, ns_name):
+log = logger.Logger(observer=logger.textFileLogObserver(sys.stdout))
+
+
+class DNSEchoRecordProducer(object):
+    def __init__(self, base, ns_name, extra_records):
         self.base = base
         self.ns_name = ns_name
+        self.extra_records = extra_records
 
     def get(self, name, default=tuple()):
         # Return NS entries
-        print("Original", name)
+        log.info("Original '{name}'", name=name)
         if name == self.base:
-            return (dns.Record_NS(self.base, ttl=604800),)
+            return (dns.Record_NS(self.base, ttl=604800),) + self.extra_records
 
         if not name.endswith(self.base):
             return default
@@ -38,8 +45,9 @@ class DNSEchoAuthority(authority.FileAuthority):
     _ADDITIONAL_PROCESSING_TYPES = tuple()
     _ADDRESS_TYPES = (dns.A,)
 
-    def __init__(self, base, ns_name):
+    def __init__(self, base, ns_name, extra_records=tuple()):
         self.ns_name = ns_name
+        self.extra_records = extra_records
         super().__init__(base)
 
     def loadFile(self, base):
@@ -59,4 +67,6 @@ class DNSEchoAuthority(authority.FileAuthority):
             ),
         )
 
-        self.records = DNSEchoRecordProducer(self.base, self.ns_name)
+        self.records = DNSEchoRecordProducer(
+            self.base, self.ns_name, self.extra_records
+        )

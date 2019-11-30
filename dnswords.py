@@ -34,6 +34,7 @@ class _WordsController(object):
             """
             Public README page
             """
+            request.setHeader('Content-Type', 'text/plain')
             return self.get_readme()
 
         @self.app.route("/register")
@@ -48,6 +49,7 @@ class _WordsController(object):
             if not hostname:
                 hostname = request.getRequestHostname()
             ip = request.getClientIP()
+            request.setHeader('Content-Type', 'text/plain')
             return self.register_ip(hostname, ip)
 
     @lru_cache(10240)

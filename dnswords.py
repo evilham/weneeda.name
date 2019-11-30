@@ -79,7 +79,7 @@ class _WordsController(object):
                 400, "Bad Request", "No such zone, consider hosting your own!"
             )
         try:
-            return self.get_assign_name(zone, ip)
+            return self.get_assign_name(zone, ip) + b'.' + zone + b'\n'
         except ValueError:
             return ForbiddenResource("Your IP is not allowed to use this resource.")
         except LookupError:
@@ -101,7 +101,16 @@ class _WordsController(object):
         for h in it:
             words = self.separator.join([self.all_words[i] for i in h])
             record = self.name_to_record(zone, words)
-            if not record.exists():
+            if record.exists():
+                try:
+                    record_addr = ip_address(record.getContent().decode("utf-8"))
+                    if record_addr == ipaddr:
+                        # Already registered
+                        return words
+                except:
+                    # If it contains invalid data, reuse
+                    break
+            else:
                 break
         else:
             raise LookupError("Can't assign name in '{}' for IP '{}'".format(zone, ip))

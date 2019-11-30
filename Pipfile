@@ -5,6 +5,10 @@ name = "pypi"
 
 [dev-packages]
 pytest = "*"
+python-language-server = {extras = ["mccabe", "pyflakes", "rope"],version = "*"}
+pyls-mypy = "*"
+pyls-isort = "*"
+pyls-black = "*"
 
 [requires]
 python_version = "3.7"
@@ -12,3 +16,7 @@ python_version = "3.7"
 [packages]
 twisted = {extras = [ "names", "tls",]}
 mmh3 = "*"
+klein = "*"
+
+[pipenv]
+allow_prereleases = true

@@ -38,4 +38,7 @@ WordsController.register_zone(b"yggdrasil.ungleich.cloud", ip_network("0200::/7"
 
 # If you are proxying this service, uncomment following in order to trust
 # X-Forwarded-For headers.
+# Bear in mind that if you don't filter this header properly or expose the
+# service in other interfaces that are not forwarded, you are trivially
+# allowing IP spoofing and defeating the point of this service.
 # WordsController.proxied = True

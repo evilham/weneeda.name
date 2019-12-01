@@ -25,6 +25,7 @@ class _WordsController(object):
         self.word_count = word_count
         self.separator = b"-"
         self.data = dict()
+        self.proxied = False
 
         self.app = Klein()
 
@@ -45,10 +46,18 @@ class _WordsController(object):
             We support mainly the `domain` parameter so that it's easy to reach
             from yggdrasil and other networks.
             """
+            if self.proxied:
+                # Trust X-Forwarded-For headers if set up in the config
+                from twisted.web.http import _XForwardedForRequest
+                request = _XForwardedForRequest(request)
+
             hostname = request.args.get(b'domain', [False])[0]
             if not hostname:
                 hostname = request.getRequestHostname()
-            ip = request.getClientIP()
+            try:
+                ip = request.getClientAddress().host.decode("utf-8")
+            except:
+                ip = None
             request.setHeader('Content-Type', 'text/plain')
             return self.register_ip(hostname, ip)
 

@@ -35,3 +35,7 @@ config = {
 
 # Notice as well that you must register any zones to WordsController yourself
 WordsController.register_zone(b"yggdrasil.ungleich.cloud", ip_network("0200::/7"))
+
+# If you are proxying this service, uncomment following in order to trust
+# X-Forwarded-For headers.
+# WordsController.proxied = True

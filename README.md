@@ -1,4 +1,4 @@
-# [twisted-dnslabs](https://github.com/evilham/twisted-dnslabs)
+# [WeNeedA.name](https://github.com/evilham/weneeda.name)
 
 DNS testing ground based on twisted.
 

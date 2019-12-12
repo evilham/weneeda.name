@@ -1,4 +1,5 @@
 import sys
+from ipaddress import ip_address
 
 import twisted.logger as logger
 from twisted.names import authority, dns
@@ -22,18 +23,27 @@ class DNSEchoRecordProducer(object):
         if not name.endswith(self.base):
             return default
 
-        # Remove base name
-        local_name = name[: -len(self.base)]
-
-        # Ensure trailing dot and 4 "numbers" before
-        if local_name[-1:] != b"." or len(local_name.split(b".")) != 5:
+        try:
+            # Remove base name and trailing dot
+            local_name = name[:-len(self.base) - 1]
+            # ip_address handles bytes as a big integer, need str
+            _name = local_name.decode('utf-8')
+            # Try to handle other representations for IPv6
+            if "-" in _name or _name.count(".") > 3:
+                _name = _name.replace("-", ":").replace(".", ":")
+            # Try to read an IP address out of this
+            ip = ip_address(_name)
+        except:
+            # If any of that goes wrong, return NX
             return default
 
-        # Remove trailing dot.
-        local_name = local_name[:-1]
-
         try:
-            record = dns.Record_A(address=local_name, ttl=604800)
+            if ip.version == 6:
+                record = dns.Record_AAAA(address=ip.exploded, ttl=604800)
+            elif ip.version == 4:
+                record = dns.Record_A(address=ip.exploded, ttl=604800)
+            else:
+                raise NotImplementedError("What's dis? v8?")
         except:
             return default
 
